@@ -86,7 +86,7 @@ class mp_orders extends platform_abstract
     			$articles[0]['Title'] = '订单号：'.$order['order_sn'];
     			$articles[0]['PicUrl'] = '';
     			$articles[0]['Description'] = '商品信息：'. $goods ."\r\n". '总金额：'. $order['total_fee'] ."\r\n". '订单状态：'. $order_status . $shipping_status . $pay_status ."\r\n". '快递公司：'. $order['shipping_name'] ."\r\n". '物流单号：' . $order['invoice_no'];
-    			$articles[0]['Url'] = 'http://test.b2b2c.ecjia.com/sites/touch/index.php?m=user&c=user_order&a=order_detail&order_id='.$order_id;
+    			$articles[0]['Url'] = RC_Uri::site_url().'/sites/m/index.php?m=user&c=user_order&a=order_detail&order_id='.$order_id;
     			 
     			$count = count($articles);
     			$content = array(
