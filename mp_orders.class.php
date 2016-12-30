@@ -23,7 +23,7 @@ class mp_orders extends platform_abstract
 
     	$wechatuser_db = RC_Loader::load_app_model('wechat_user_model','wechat');
     	$orders_db = RC_Loader::load_app_model('order_info_model','orders');
-    	RC_Loader::load_app_func('order','orders');
+    	RC_Loader::load_app_func('admin_order','orders');
     	
     	$openid = $this->from_username;
     	$uid  = $wechatuser_db->where(array('openid' => $openid))->get_field('ect_uid');//获取绑定用户会员id
