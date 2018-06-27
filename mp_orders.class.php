@@ -51,7 +51,6 @@ defined('IN_ECJIA') or exit('No permission resources.');
 
 use Ecjia\App\Platform\Plugin\PlatformAbstract;
 
-// RC_Loader::load_app_class('platform_abstract', 'platform', false);
 class mp_orders extends PlatformAbstract
 {    
 
@@ -88,15 +87,17 @@ class mp_orders extends PlatformAbstract
     }
     
 	/**
-	 * 获取插件配置信息
-	 */
-	public function local_config() {
-		$config = include(RC_Plugin::plugin_dir_path(__FILE__) . 'config.php');
-		if (is_array($config)) {
-			return $config;
-		}
-		return array();
-	}
+     * 获取iconUrl
+     * {@inheritDoc}
+     * @see \Ecjia\App\Platform\Plugin\PlatformAbstract::getPluginIconUrl()
+     */
+    public function getPluginIconUrl()
+    {
+        if ($this->loadConfig('ext_icon')) {
+            return RC_Plugin::plugin_dir_url(__FILE__) . $this->loadConfig('ext_icon');
+        }
+        return '';
+    }
 	
     public function event_reply() {
     	$orders_db = RC_Loader::load_app_model('order_info_model','orders');
