@@ -99,7 +99,12 @@ class mp_orders extends PlatformAbstract
         return '';
     }
 	
-    public function event_reply() {
+    /**
+     * 事件回复
+     * {@inheritDoc}
+     * @see \Ecjia\App\Platform\Plugin\PlatformAbstract::eventReply()
+     */
+    public function eventReply() {
     	$orders_db = RC_Loader::load_app_model('order_info_model','orders');
     	$connect_db = RC_Loader::load_app_model('connect_user_model', 'connect');
     	RC_Loader::load_app_func('admin_order','orders');
