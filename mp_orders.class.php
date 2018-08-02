@@ -107,6 +107,9 @@ class mp_orders extends PlatformAbstract
      * @see \Ecjia\App\Platform\Plugin\PlatformAbstract::eventReply()
      */
     public function eventReply() {
+
+
+
 //    	$orders_db = RC_Loader::load_app_model('order_info_model','orders');
 //    	$connect_db = RC_Loader::load_app_model('connect_user_model', 'connect');
 //    	RC_Loader::load_app_func('admin_order','orders');
@@ -140,46 +143,54 @@ class mp_orders extends PlatformAbstract
             $wechat_user = new WechatUser($wechat_id, $openid);
             $userid = $wechat_user->getEcjiaUserId();
 
-            $check = RC_DB::table('order_info')->where('user_id', '=', $userid)->get();
+            $store_id = $this->getStoreId();
 
-            if (empty($check)){
+            $orders = RC_Api::api('orders', 'order_list', ['user_id' => $userid, 'size' => 8, 'store_id' => $store_id]);
+//            dd($orders);
+
+//            $check = RC_DB::table('order_info')->where('user_id', '=', $userid)->get();
+
+            if (empty($orders)){
                 $articles = [
-                    'Title' => '订单查询查询',
+                    'Title' => '订单查询',
                     'Description' => '您目前还没有消费过哦',
                     'Url'           => '',
                     'PicUrl' => '',
                 ];
                 return WechatRecord::News_reply($this->getMessage(), $articles['Title'], $articles['Description'], $articles['Url'], $articles['PicUrl']);
             }
+
             $order_info = RC_DB::table('order_info')->where('user_id', '=', $userid)->orderBy('add_time', 'ASC')->take(8)->get();
 
 
 //dd($order_info);
-            foreach ($order_info as $key => $val) {
-                switch ($order_info['order_status']){
-                    case 0 : $order_info[$key]['order_status_zh']  = '未确认'; break;
-                    case 1 : $order_info[$key]['order_status_zh']  = '已确认'; break;
-                    case 2 : $order_info[$key]['order_status_zh']  = '已取消'; break;
-                    case 3 : $order_info[$key]['order_status_zh']  = '无效'; break;
-                    case 4 : $order_info[$key]['order_status_zh']  = '退货'; break;
-                    case 5 : $order_info[$key]['order_status_zh']  = '已分单'; break;
-                    case 6 : $order_info[$key]['order_status_zh']  = '部分分单'; break;
-                }
+            foreach ($orders['order_list'] as $key => $orderinfo) {
+//                switch ($order_info['order_status']){
+//                    case 0 : $order_info[$key]['order_status_zh']  = '未确认'; break;
+//                    case 1 : $order_info[$key]['order_status_zh']  = '已确认'; break;
+//                    case 2 : $order_info[$key]['order_status_zh']  = '已取消'; break;
+//                    case 3 : $order_info[$key]['order_status_zh']  = '无效'; break;
+//                    case 4 : $order_info[$key]['order_status_zh']  = '退货'; break;
+//                    case 5 : $order_info[$key]['order_status_zh']  = '已分单'; break;
+//                    case 6 : $order_info[$key]['order_status_zh']  = '部分分单'; break;
+//                }
 
-                $order_goods= RC_DB::table('order_goods')->where('order_id', '=', $order_info[$key]['order_id'])->get();
-                $goods = RC_DB::table('goods')->where('goods_sn', '=', $order_goods[$key]['goods_sn'])->get();
+//                $order_goods= RC_DB::table('order_goods')->where('order_id', '=', $order_info[$key]['order_id'])->get();
+//                $goods = RC_DB::table('goods')->where('goods_sn', '=', $order_goods[$key]['goods_sn'])->get();
 
 
-                $url = '';
-                $image = RC_Upload::upload_url($goods[$key]['goods_img']);
-                $title = '【' . $order_info[$key]['order_status_zh'] . '】' . "订单号：" . $val['order_sn'];
-                $articles[$key] = WechatRecord::News_reply($this->getMessage(), $title,'', $url, $image);
-//                $articles = [
-//                    'Title' => '积分查询',
-//                    'Description' => sprintf("尊敬的%s用户:\n您的订单：%s", ecjia::config('shop_name'), $val['address']),
-//                    'Url' => RC_Uri::url('platform/plugin/show', array('handle' => 'mp_ddcx/init', 'openid' => $openid, 'uuid' => $uuid)),
-//                    'PicUrl' => RC_Plugin::plugin_dir_url(__FILE__) . '/images/icon_orders.png',
-//                ];
+//                $url = '';
+//                $image = RC_Upload::upload_url($goods[$key]['goods_img']);
+//                $title = '【' . $order_info[$key]['order_status_zh'] . '】' . "订单号：" . $val['order_sn'];
+
+
+                $article = [
+                    'Title' => sprintf("【%s】订单号：%s", $orderinfo['label_order_status'], $orderinfo['order_sn']),
+                    'Url' => RC_Uri::url('platform/plugin/show', array('handle' => 'mp_ddcx/init', 'openid' => $openid, 'uuid' => $uuid)),
+                    'PicUrl' => $orderinfo['goods_list'][0]['img']['thumb'],
+                ];
+
+                $articles[$key] = WechatRecord::News_reply($this->getMessage(), $article['Title'],'', $article['Url'], $article['PicUrl']);
             }
 //            dd($order_info);
 
