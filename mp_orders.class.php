@@ -173,7 +173,7 @@ class mp_orders extends PlatformAbstract
 
                 $url = '';
                 $image = RC_Upload::upload_url($goods[$key]['goods_img']);
-                $title = '(' . $order_info[$key]['order_status_zh'] . ')' . "订单号：" . $val['order_sn'];
+                $title = '【' . $order_info[$key]['order_status_zh'] . '】' . "订单号：" . $val['order_sn'];
                 $articles[$key] = WechatRecord::News_reply($this->getMessage(), $title,'', $url, $image);
 //                $articles = [
 //                    'Title' => '积分查询',
