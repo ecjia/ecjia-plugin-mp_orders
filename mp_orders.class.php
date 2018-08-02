@@ -120,13 +120,7 @@ class mp_orders extends PlatformAbstract
 //    	$wechat_id = $account->getAccountID();
 //    	$wechat_user = new wechat_user($wechat_id, $openid);
 
-        $wechatUUID = new \Ecjia\App\Wechat\WechatUUID();
 
-        $wechat_id = $wechatUUID->getWechatID();
-        $uuid   = $wechatUUID->getUUID();
-        $openid = $this->getMessage()->get('FromUserName');
-
-        $wechat_user = new WechatUser($wechat_id, $openid);
 
 //    	$ect_uid = $wechat_user->getUserId();
 //    	$unionid = $wechat_user->getUnionid();
@@ -139,6 +133,11 @@ class mp_orders extends PlatformAbstract
         if (! $this->hasBindUser()) {
             return $this->forwardCommand('mp_userbind');
         } else {
+            $wechatUUID = new \Ecjia\App\Wechat\WechatUUID();
+            $wechat_id = $wechatUUID->getWechatID();
+            $uuid   = $wechatUUID->getUUID();
+            $openid = $this->getMessage()->get('FromUserName');
+            $wechat_user = new WechatUser($wechat_id, $openid);
             $userid = $wechat_user->getEcjiaUserId();
 
             $check = RC_DB::table('order_info')->where('user_id', '=', $userid)->get();
@@ -152,8 +151,8 @@ class mp_orders extends PlatformAbstract
                 ];
                 return WechatRecord::News_reply($this->getMessage(), $articles['Title'], $articles['Description'], $articles['Url'], $articles['PicUrl']);
             }
+            $order_info = RC_DB::table('order_info')->where('user_id', '=', $userid)->orderBy('add_time', 'ASC')->take(8)->get();
 
-            $order_info = RC_DB::table('order_info')->where('user_id', '=', $userid)->orderBy('add_time', 'ASC')->get();
 
 //dd($order_info);
             foreach ($order_info as $key => $val) {
