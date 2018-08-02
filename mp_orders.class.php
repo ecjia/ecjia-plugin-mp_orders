@@ -297,7 +297,7 @@ class mp_orders extends PlatformAbstract
 //    	}
     	
     	
-        return $content;
+//        return $content;
     }
     
 }
