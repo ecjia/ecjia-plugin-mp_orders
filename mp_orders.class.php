@@ -123,8 +123,8 @@ class mp_orders extends PlatformAbstract
 
             if (empty($orders)){
                 $articles = [
-                    'Title' => '订单查询',
-                    'Description' => '您目前还没有消费过哦',
+                    'Title' => __('订单查询', 'mp_orders'),
+                    'Description' => __('您目前还没有消费过哦', 'mp_orders'),
                     'Url'           => '',
                     'PicUrl' => '',
                 ];
@@ -136,7 +136,7 @@ class mp_orders extends PlatformAbstract
                 //https://cityo2o.ecjia.com/sites/m/index.php?m=user&c=order&a=order_detail&order_id=55347&type=detail
 
                 $article = [
-                    'Title' => sprintf("【%s】订单号：%s", $orderinfo['label_order_status'], $orderinfo['order_sn']),
+                    'Title' => sprintf(__("【%s】订单号：%s", 'mp_orders'), $orderinfo['label_order_status'], $orderinfo['order_sn']),
                     'Url' => str_replace('sites/platform/', 'sites/m/', RC_Uri::url('user/order/order_detail', array('order_id' => $orderinfo['order_id'], 'type' => detail))),
                     'PicUrl' => $orderinfo['goods_list'][0]['img']['small'],
                 ];
