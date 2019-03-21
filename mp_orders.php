@@ -73,6 +73,7 @@ class plugin_mp_orders {
 }
 
 Ecjia_PluginManager::extend('mp_orders', function() {
+    RC_Locale::loadPluginTextdomain('mp_orders');
     require_once RC_Plugin::plugin_dir_path(__FILE__) . 'mp_orders.class.php';
     return new mp_orders();
 });
